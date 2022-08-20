@@ -1,0 +1,18 @@
+ * {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+ }
+
+ :root {
+    --green1: #EEF9BF;
+    --green2: #99CEA8;
+    --green3: #75B79E;
+ }
+
+ body, h1 {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--green1);
+ }
+
+ 
