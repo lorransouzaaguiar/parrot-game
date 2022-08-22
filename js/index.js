@@ -3,8 +3,8 @@ import { MainComponent } from './components/main.js'
 import { GameComponent } from './components/game.js'
 
 (function App() {
-    const numberOfCards = input(4)
+    const numberOfCards = input()
     MainComponent().render(numberOfCards)
-    GameComponent()
+    GameComponent().startCardButtons()
 
 })()
