@@ -1,77 +1,83 @@
-import { dealWithImages } from './deal-with-images.js'
-import { CardComponent } from './components/card.js'
+import { MainComponent } from './components/main.js'
 
-const inputUser = 6
+const isPar = (number) => number % 2 === 0 ? true : false;
 
-const Card = (id, img, isOpen = false) => ({
-    id, isOpen, img
-})
-
-const MainComponent = () => {
-    const main = document.querySelector('main')
-
-    const gernerateCardList = (length) => {
-        const image = dealWithImages(length)
-        const randomImagePaths = image.getRandomImagePaths()
-        const cardList = []
-
-        randomImagePaths.forEach((imagePath, index) => {
-            const id = index + 1
-            const img = imagePath
-            const card = Card(id, img)
-            cardList.push(card)
-        })
-
-        return cardList
-    }
-
-    const renderCardComponentList = (length) => {
-        const cardList = gernerateCardList(length)
-
-        const toggle = (card, cardComponent) => {
-            if (!card.isOpen) {
-                cardComponent.classList.toggle('is-flipped', true);
-                card.isOpen = true
-            } else {
-                const otherCards = cardList.filter(s => s.id !== card.id)
-                const foundCard = otherCards.find(c =>
-                    c.img === card.img && c.isOpen === card.isOpen)
-
-                if (foundCard) {
-                    card.isOpen = true
-                } else {
-                    cardComponent.classList.toggle('is-flipped', false);
-                    card.isOpen = false
-                }
-            }
-        }
-
-        const cardComponentList = cardList.map(card => {
-            const cardComponent = CardComponent({
-                faceBackImg: card.img,
-                onclick: () => {
-                    toggle(card, cardComponent)
-                }
-            })
-            return cardComponent
-        })
-
-        return cardComponentList
-    }
-
-    const render = () => {
-        const main = document.querySelector('main')
-        const cardList = renderCardComponentList(inputUser)
-
-        cardList.forEach(cardComponent => {
-            main.appendChild(cardComponent)
-        })
-
-    }
-
-    render()
-}
+const Card = (element, isOpen = false, isFoundPair = false) => ({ isOpen, isFoundPair, element });
 
 (function App() {
-    MainComponent()
+
+    let numberOfCards = 0
+
+    do {
+        numberOfCards = prompt('Insira a quantidade de cartas do jogo (Apenas numeros pares menores que 14)')
+    } while (!isPar(numberOfCards) || numberOfCards > 14)
+
+    MainComponent().render(numberOfCards)
+    const cardsObject = document.querySelectorAll('.card-wrapper')
+    const cardElement = Object.values(cardsObject)
+    const cards = cardElement.map(el => Card(el))
+
+    cards.forEach(card => {
+
+        card.element.onclick = () => {
+            if (card.isOpen) {
+                card.element.classList.toggle('is-flipped');
+                card.isOpen = false
+            } else {
+                card.element.classList.toggle('is-flipped', true);
+                card.isOpen = true
+                const otherCards = cards.filter(c => c.element.getAttribute('id') !== card.element.getAttribute('id'))
+                activeButtonWhenEqualCardIsFound(otherCards, card)
+                flipCardBackWhenCardIsDifferent(otherCards, card)
+            }
+
+        }
+
+    })
+
+    const getImageFromCardElement = (element) => {
+        return element.children[1].children[0].getAttribute('src')
+    }
+
+    const flipCardBackWhenCardIsDifferent = (otherCards, currentCard) => {
+        const cardClickedBefore = otherCards.find(c => c.isOpen && c.isFoundPair === false)
+
+        if (cardClickedBefore) {
+            if (getImageFromCardElement(cardClickedBefore.element) !== getImageFromCardElement(currentCard.element)) {
+
+                setTimeout(() => {
+                    cardClickedBefore.element.classList.toggle('is-flipped');
+                    currentCard.element.classList.toggle('is-flipped');
+                    cardClickedBefore.isOpen = false
+                    currentCard.isOpen = false
+                }, 1000)
+            }
+
+        }
+    }
+
+    const activeButtonWhenEqualCardIsFound = (otherCards, currentCard) => {
+        const foundCardEqual = otherCards.find(card => {
+            const imgBackFacePath = getImageFromCardElement(card.element)
+            const currentImgBackFacePath = getImageFromCardElement(currentCard.element)
+            return imgBackFacePath === currentImgBackFacePath && card.isOpen
+        })
+
+        if (foundCardEqual) {
+            currentCard.isFoundPair = true
+            foundCardEqual.isFoundPair = true
+
+            currentCard.element.onclick = () => {
+                currentCard.element.classList.toggle('is-flipped', true);
+                foundCardEqual.element.classList.toggle('is-flipped', true)
+            }
+
+            foundCardEqual.element.onclick = () => {
+                currentCard.element.classList.toggle('is-flipped', true);
+                foundCardEqual.element.classList.toggle('is-flipped', true)
+            }
+        }
+    }
+
+
 })()
