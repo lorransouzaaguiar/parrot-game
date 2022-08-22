@@ -8,7 +8,7 @@ import { isPar } from './utils/par.js'
 
     do {
         numberOfCards = prompt('Insira a quantidade de cartas do jogo (Apenas numeros pares menores que 14)')
-    } while (!isPar(numberOfCards) || numberOfCards > 14)
+    } while (!isPar(numberOfCards) || numberOfCards < 4 || numberOfCards > 14)
 
     MainComponent().render(numberOfCards)
 
