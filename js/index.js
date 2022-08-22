@@ -1,8 +1,6 @@
 import { MainComponent } from './components/main.js'
-
-const isPar = (number) => number % 2 === 0 ? true : false;
-
-const Card = (element, isOpen = false, isFoundPair = false) => ({ isOpen, isFoundPair, element });
+import { Card } from './model/card.js'
+import { isPar } from './utils/par.js'
 
 (function App() {
 
@@ -13,6 +11,7 @@ const Card = (element, isOpen = false, isFoundPair = false) => ({ isOpen, isFoun
     } while (!isPar(numberOfCards) || numberOfCards > 14)
 
     MainComponent().render(numberOfCards)
+
     const cardsObject = document.querySelectorAll('.card-wrapper')
     const cardElement = Object.values(cardsObject)
     const cards = cardElement.map(el => Card(el))
