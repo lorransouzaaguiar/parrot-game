@@ -11,31 +11,30 @@ export const GameComponent = () => {
         return cards
     }
 
-    const cardComponentButton = () => {
+    const cardOnClick = (card, cards) => () => {
+        if (!card.isOpen) {
+            card.element.classList.toggle('is-flipped', true);
+            card.isOpen = true
+            const otherCards = cards.filter(c => c.element.getAttribute('id') !== card.element.getAttribute('id'))
+            activeButtonWhenEqualCardIsFound(otherCards, card)
+            flipCardBackWhenCardIsDifferent(otherCards, card)
+        }
+
+        const allCardsOpen = cards.every(card => card.isOpen)
+        if (allCardsOpen) {
+            alert(`Você ganhou em ${numberOfMoves} jogadas!`)
+        }
+
+    }
+
+    const startCardButtons = () => {
         const cards = getCardsFromDOM()
         cards.forEach(card => {
-
-            card.element.onclick = () => {
-                if (!card.isOpen) {
-                    card.element.classList.toggle('is-flipped', true);
-                    card.isOpen = true
-                    const otherCards = cards.filter(c => c.element.getAttribute('id') !== card.element.getAttribute('id'))
-                    activeButtonWhenEqualCardIsFound(otherCards, card)
-                    flipCardBackWhenCardIsDifferent(otherCards, card)
-                }
-
-                const allCardsOpen = cards.every(card => card.isOpen)
-
-                if (allCardsOpen) {
-                    alert(`Você ganhou em ${numberOfMoves} jogadas!`)
-                }
-
-            }
-
+            card.element.onclick = cardOnClick(card, cards)
         })
     }
 
-    const getImageFromCardElement = (element) => {
+    const getImagePathFromCardElement = (element) => {
         return element.children[1].children[0].getAttribute('src')
     }
 
@@ -43,7 +42,7 @@ export const GameComponent = () => {
         const cardClickedBefore = otherCards.find(c => c.isOpen && c.isFoundPair === false)
 
         if (cardClickedBefore) {
-            if (getImageFromCardElement(cardClickedBefore.element) !== getImageFromCardElement(currentCard.element)) {
+            if (getImagePathFromCardElement(cardClickedBefore.element) !== getImagePathFromCardElement(currentCard.element)) {
 
                 numberOfMoves += 1
 
@@ -60,8 +59,8 @@ export const GameComponent = () => {
 
     const activeButtonWhenEqualCardIsFound = (otherCards, currentCard) => {
         const foundCardEqual = otherCards.find(card => {
-            const imgBackFacePath = getImageFromCardElement(card.element)
-            const currentImgBackFacePath = getImageFromCardElement(currentCard.element)
+            const imgBackFacePath = getImagePathFromCardElement(card.element)
+            const currentImgBackFacePath = getImagePathFromCardElement(currentCard.element)
             return imgBackFacePath === currentImgBackFacePath && card.isOpen
         })
 
@@ -83,6 +82,6 @@ export const GameComponent = () => {
         }
     }
 
-    cardComponentButton()
+    return { startCardButtons }
 
 }
