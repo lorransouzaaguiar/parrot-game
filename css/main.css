@@ -2,11 +2,9 @@ main {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    align-items: center;
+    justify-items: center;
     gap: 34px;
-    margin: 0 auto;
-    max-width: 872px ;
-    margin: 0 auto 153px auto;
+    margin-bottom: 153px;
 }
 
 @media (max-width: 872px) {

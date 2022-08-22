@@ -15,4 +15,9 @@
     background-color: var(--green1);
  }
 
+ .wrapper {
+   margin: 0 auto;
+   max-width: 872px ;
+ }
+
  
