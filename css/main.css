@@ -1,12 +1,21 @@
 main {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(3, 1fr);
+    align-items: center;
     gap: 34px;
     margin: 0 auto;
-    max-height: 326px;
-    max-width: 872px + 117px + 34px;
+    max-width: 872px ;
     margin: 0 auto 153px auto;
+}
+
+@media (max-width: 872px) {
+    main {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
 }
 
 .card-wrapper {
