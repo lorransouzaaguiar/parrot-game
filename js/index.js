@@ -5,6 +5,7 @@ import { isPar } from './utils/par.js'
 (function App() {
 
     let numberOfCards = 0
+    let numberOfMoves = 0
 
     do {
         numberOfCards = prompt('Insira a quantidade de cartas do jogo (Apenas numeros pares menores que 14)')
@@ -19,15 +20,19 @@ import { isPar } from './utils/par.js'
     cards.forEach(card => {
 
         card.element.onclick = () => {
-            if (card.isOpen) {
-                card.element.classList.toggle('is-flipped');
-                card.isOpen = false
-            } else {
+            if (!card.isOpen) {
                 card.element.classList.toggle('is-flipped', true);
                 card.isOpen = true
                 const otherCards = cards.filter(c => c.element.getAttribute('id') !== card.element.getAttribute('id'))
                 activeButtonWhenEqualCardIsFound(otherCards, card)
                 flipCardBackWhenCardIsDifferent(otherCards, card)
+            }
+
+            const allCardsOpen = cards.every(card => card.isOpen)
+            console.log(allCardsOpen)
+
+            if (allCardsOpen) {
+                alert(`Você ganhou em ${numberOfMoves} jogadas!`)
             }
 
         }
@@ -38,11 +43,13 @@ import { isPar } from './utils/par.js'
         return element.children[1].children[0].getAttribute('src')
     }
 
-    const flipCardBackWhenCardIsDifferent = (otherCards, currentCard) => {
+    const flipCardBackWhenCardIsDifferent = async (otherCards, currentCard) => {
         const cardClickedBefore = otherCards.find(c => c.isOpen && c.isFoundPair === false)
 
         if (cardClickedBefore) {
             if (getImageFromCardElement(cardClickedBefore.element) !== getImageFromCardElement(currentCard.element)) {
+
+                numberOfMoves += 1
 
                 setTimeout(() => {
                     cardClickedBefore.element.classList.toggle('is-flipped');
@@ -65,6 +72,8 @@ import { isPar } from './utils/par.js'
         if (foundCardEqual) {
             currentCard.isFoundPair = true
             foundCardEqual.isFoundPair = true
+
+            numberOfMoves += 1
 
             currentCard.element.onclick = () => {
                 currentCard.element.classList.toggle('is-flipped', true);
