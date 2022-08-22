@@ -1,9 +1,9 @@
-export const CardComponent = ({ faceBackImg, onclick }) => {
+export const CardComponent = ({ key, faceBackImg }) => {
 
     const render = () => {
         const card = document.createElement('arcticle')
         card.classList.add('card-wrapper')
-        card.onclick = onclick
+        card.setAttribute('id', key)
         card.appendChild(renderFace())
         card.appendChild(renderBack())
 
